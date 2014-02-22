@@ -4,97 +4,117 @@
 
 package uk.co.bluettduncanj;
 
+import java.awt.Color;
+import java.awt.EventQueue;
+import java.awt.Font;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
+import java.text.NumberFormat;
+
+import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JTextField;
-import javax.swing.JButton;
-
-import java.awt.EventQueue;
-import java.awt.Font;
 import javax.swing.SwingConstants;
-import java.awt.event.ActionListener;
-import java.awt.event.ActionEvent;
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
-import java.awt.Color;
-import java.text.NumberFormat;
-
 
 /**
  * @author Jonathan
  */
 public class GUI {
 
-  private JFrame frmCalculator;
+  private JFrame     frmCalculator;
   private JTextField txtInputOutput;
-  private JButton btnCalculate;
-  private JButton btn0;
-  private JButton btnDecimalPoint;
-  private JButton btn1;
-  private JButton btn2;
-  private JButton btn3;
-  private JButton btn4;
-  private JButton btn5;
-  private JButton btn6;
-  private JButton btn7;
-  private JButton btn8;
-  private JButton btn9;
-  private JButton btnSpace;
-  private JButton btnAdd;
-  private JButton btnSubtract;
-  private JButton btnMultiply;
-  private JButton btnDivide;
-
-  /**
-   * Launch the application.
-   */
-  public static void main(String[] args) {
-    EventQueue.invokeLater(new Runnable() {
-
-      public void run() {
-        try {
-          GUI window = new GUI();
-          window.frmCalculator.setVisible(true);
-        }
-        catch (Exception e) {
-          e.printStackTrace();
-        }
-      }
-    });
-  }
+  private JButton    btnCalculate;
+  private JButton    btnDecimalPoint;
+  private JButton[]  btnNums;
+  private JButton    btnSpace;
+  private JButton    btnAdd;
+  private JButton    btnSubtract;
+  private JButton    btnMultiply;
+  private JButton    btnDivide;
+  private Font       commonFont;
 
   /**
    * Create the application.
    */
   public GUI() {
-    initialize();
+    this.initialize();
+  }
+
+  private void appendText(String newText) {
+    String currentText = this.txtInputOutput.getText();
+    currentText += newText;
+    this.txtInputOutput.setText(currentText);
+  }
+
+  private void back() {
+    String currentText = this.txtInputOutput.getText();
+    if (!currentText.isEmpty()) {
+      currentText = currentText.substring(0, currentText.length() - 1);
+      this.txtInputOutput.setText(currentText);
+    }
+  }
+
+  private void calculate() {
+    String input = this.txtInputOutput.getText();
+    PostfixEvaluator evaluator = new PostfixEvaluator(input);
+
+    double answer = 0.0;
+    try {
+      answer = evaluator.getResult();
+    }
+    catch (Exception e) {
+      JOptionPane.showMessageDialog(null, e.getMessage(), "Error", JOptionPane.WARNING_MESSAGE);
+    }
+
+    String output = "";
+
+    NumberFormat nf;
+    if (Utility.isWholeNumber(answer)) {
+      nf = NumberFormat.getIntegerInstance();
+    }
+    else {
+      nf = NumberFormat.getInstance();
+    }
+    nf.setGroupingUsed(false);
+    output = nf.format(answer);
+
+    this.txtInputOutput.setText(output);
+  }
+
+  private void clear() {
+    this.txtInputOutput.setText(null);
   }
 
   /**
    * Initialize the contents of the frame.
    */
   private void initialize() {
-    frmCalculator = new JFrame();
-    frmCalculator.setResizable(false);
-    frmCalculator.setTitle("RPN Calculator");
-    frmCalculator.setBounds(100, 100, 417, 265);
-    frmCalculator.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-    frmCalculator.getContentPane().setLayout(null);
-    
-    txtInputOutput = new JTextField();
-    txtInputOutput.setFocusTraversalKeysEnabled(false);
-    txtInputOutput.addKeyListener(new KeyListener() {
+    this.commonFont = new Font("Tahoma", Font.PLAIN, 16);
+
+    this.frmCalculator = new JFrame();
+    this.frmCalculator.setResizable(false);
+    this.frmCalculator.setTitle("RPN Calculator");
+    this.frmCalculator.setBounds(100, 100, 417, 265);
+    this.frmCalculator.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+    this.frmCalculator.getContentPane().setLayout(null);
+
+    this.txtInputOutput = new JTextField();
+    this.txtInputOutput.setFocusTraversalKeysEnabled(false);
+    this.txtInputOutput.addKeyListener(new KeyListener() {
 
       @Override
       public void keyPressed(KeyEvent e) {
         // TODO Auto-generated method stub
-        
+
       }
 
       @Override
       public void keyReleased(KeyEvent e) {
         // TODO Auto-generated method stub
-        
+
       }
 
       @Override
@@ -117,303 +137,191 @@ public class GUI {
           case '-':
           case '*':
           case '/':
-            appendText(String.valueOf(key));
+            GUI.this.appendText(String.valueOf(key));
         }
       }
-      
+
     });
-    txtInputOutput.setBackground(Color.WHITE);
-    txtInputOutput.setEditable(false);
-    txtInputOutput.setHorizontalAlignment(SwingConstants.RIGHT);
-    txtInputOutput.setFont(new Font("Tahoma", Font.PLAIN, 16));
-    txtInputOutput.setBounds(10, 11, 390, 31);
-    frmCalculator.getContentPane().add(txtInputOutput);
-    txtInputOutput.setColumns(10);
-    
-    btnCalculate = new JButton("=");
-    btnCalculate.setFocusTraversalKeysEnabled(false);
-    btnCalculate.setFocusable(false);
-    btnCalculate.addActionListener(new ActionListener() {
+    this.txtInputOutput.setBackground(Color.WHITE);
+    this.txtInputOutput.setEditable(false);
+    this.txtInputOutput.setHorizontalAlignment(SwingConstants.RIGHT);
+    this.txtInputOutput.setFont(this.commonFont);
+    this.txtInputOutput.setBounds(10, 11, 390, 31);
+    this.frmCalculator.getContentPane().add(this.txtInputOutput);
+    this.txtInputOutput.setColumns(10);
+
+    this.btnCalculate = new JButton("=");
+    this.btnCalculate.setFocusTraversalKeysEnabled(false);
+    this.btnCalculate.setFocusable(false);
+    this.btnCalculate.addActionListener(new ActionListener() {
+
+      @Override
       public void actionPerformed(ActionEvent arg0) {
-        calculate();
+        GUI.this.calculate();
       }
     });
-    btnCalculate.setFont(new Font("Tahoma", Font.PLAIN, 16));
-    btnCalculate.setBounds(170, 190, 70, 35);
-    frmCalculator.getContentPane().add(btnCalculate);
-    
-    btn7 = new JButton("7");
-    btn7.setFocusTraversalKeysEnabled(false);
-    btn7.setFocusable(false);
-    btn7.addActionListener(new ActionListener() {
+    this.btnCalculate.setFont(this.commonFont);
+    this.btnCalculate.setBounds(170, 190, 70, 35);
+    this.frmCalculator.getContentPane().add(this.btnCalculate);
+
+    this.btnNums = new JButton[10];
+    for (int i = 0; i < 10; i++) {
+      this.btnNums[i] = new JButton(String.valueOf(i));
+      this.btnNums[i].setFocusTraversalKeysEnabled(false);
+      this.btnNums[i].setFocusable(false);
+      this.btnNums[i].addActionListener(new ActionListener() {
+
+        @Override
+        public void actionPerformed(ActionEvent e) {
+          JButton btn = (JButton) e.getSource();
+          GUI.this.appendText(btn.getText());
+        }
+      });
+      this.btnNums[i].setFont(this.commonFont);
+    }
+    this.btnNums[0].setBounds(10, 190, 70, 35);
+    this.btnNums[1].setBounds(10, 143, 70, 35);
+    this.btnNums[2].setBounds(90, 143, 70, 35);
+    this.btnNums[3].setBounds(170, 143, 70, 35);
+    this.btnNums[4].setBounds(10, 98, 70, 35);
+    this.btnNums[5].setBounds(90, 98, 70, 35);
+    this.btnNums[6].setBounds(170, 98, 70, 35);
+    this.btnNums[7].setBounds(10, 53, 70, 35);
+    this.btnNums[8].setBounds(90, 53, 70, 35);
+    this.btnNums[9].setBounds(170, 53, 70, 35);
+    for (int i = 0; i < 10; i++) {
+      this.frmCalculator.getContentPane().add(this.btnNums[i]);
+    }
+
+    this.btnDecimalPoint = new JButton(".");
+    this.btnDecimalPoint.setFocusTraversalKeysEnabled(false);
+    this.btnDecimalPoint.setFocusable(false);
+    this.btnDecimalPoint.addActionListener(new ActionListener() {
+
+      @Override
       public void actionPerformed(ActionEvent e) {
-        appendText(btn7.getText());
+        GUI.this.appendText(GUI.this.btnDecimalPoint.getText());
       }
     });
-    btn7.setFont(new Font("Tahoma", Font.PLAIN, 16));
-    btn7.setBounds(10, 53, 70, 35);
-    frmCalculator.getContentPane().add(btn7);
-    
-    btn8 = new JButton("8");
-    btn8.setFocusTraversalKeysEnabled(false);
-    btn8.setFocusable(false);
-    btn8.addActionListener(new ActionListener() {
-      public void actionPerformed(ActionEvent e) {
-        appendText(btn8.getText());
-      }
-    });
-    btn8.setFont(new Font("Tahoma", Font.PLAIN, 16));
-    btn8.setBounds(90, 53, 70, 35);
-    frmCalculator.getContentPane().add(btn8);
-    
-    btn9 = new JButton("9");
-    btn9.setFocusTraversalKeysEnabled(false);
-    btn9.setFocusable(false);
-    btn9.addActionListener(new ActionListener() {
-      public void actionPerformed(ActionEvent e) {
-        appendText(btn9.getText());
-      }
-    });
-    btn9.setFont(new Font("Tahoma", Font.PLAIN, 16));
-    btn9.setBounds(170, 53, 70, 35);
-    frmCalculator.getContentPane().add(btn9);
-    
-    btn4 = new JButton("4");
-    btn4.setFocusTraversalKeysEnabled(false);
-    btn4.setFocusable(false);
-    btn4.addActionListener(new ActionListener() {
-      public void actionPerformed(ActionEvent e) {
-        appendText(btn4.getText());
-      }
-    });
-    btn4.setFont(new Font("Tahoma", Font.PLAIN, 16));
-    btn4.setBounds(10, 98, 70, 35);
-    frmCalculator.getContentPane().add(btn4);
-    
-    btn5 = new JButton("5");
-    btn5.setFocusTraversalKeysEnabled(false);
-    btn5.setFocusable(false);
-    btn5.addActionListener(new ActionListener() {
-      public void actionPerformed(ActionEvent e) {
-        appendText(btn5.getText());
-      }
-    });
-    btn5.setFont(new Font("Tahoma", Font.PLAIN, 16));
-    btn5.setBounds(90, 98, 70, 35);
-    frmCalculator.getContentPane().add(btn5);
-    
-    btn6 = new JButton("6");
-    btn6.setFocusTraversalKeysEnabled(false);
-    btn6.setFocusable(false);
-    btn6.addActionListener(new ActionListener() {
-      public void actionPerformed(ActionEvent e) {
-        appendText(btn6.getText());
-      }
-    });
-    btn6.setFont(new Font("Tahoma", Font.PLAIN, 16));
-    btn6.setBounds(170, 98, 70, 35);
-    frmCalculator.getContentPane().add(btn6);
-    
-    btn1 = new JButton("1");
-    btn1.setFocusTraversalKeysEnabled(false);
-    btn1.setFocusable(false);
-    btn1.addActionListener(new ActionListener() {
-      public void actionPerformed(ActionEvent e) {
-        appendText(btn1.getText());
-      }
-    });
-    btn1.setFont(new Font("Tahoma", Font.PLAIN, 16));
-    btn1.setBounds(10, 144, 70, 35);
-    frmCalculator.getContentPane().add(btn1);
-    
-    btn2 = new JButton("2");
-    btn2.setFocusTraversalKeysEnabled(false);
-    btn2.setFocusable(false);
-    btn2.addActionListener(new ActionListener() {
-      public void actionPerformed(ActionEvent e) {
-        appendText(btn2.getText());
-      }
-    });
-    btn2.setFont(new Font("Tahoma", Font.PLAIN, 16));
-    btn2.setBounds(90, 144, 70, 35);
-    frmCalculator.getContentPane().add(btn2);
-    
-    btn3 = new JButton("3");
-    btn3.setFocusTraversalKeysEnabled(false);
-    btn3.setFocusable(false);
-    btn3.addActionListener(new ActionListener() {
-      public void actionPerformed(ActionEvent e) {
-        appendText(btn3.getText());
-      }
-    });
-    btn3.setFont(new Font("Tahoma", Font.PLAIN, 16));
-    btn3.setBounds(170, 145, 70, 35);
-    frmCalculator.getContentPane().add(btn3);
-    
-    btn0 = new JButton("0");
-    btn0.setFocusTraversalKeysEnabled(false);
-    btn0.setFocusable(false);
-    btn0.addActionListener(new ActionListener() {
-      public void actionPerformed(ActionEvent e) {
-        appendText(btn0.getText());
-      }
-    });
-    btn0.setFont(new Font("Tahoma", Font.PLAIN, 16));
-    btn0.setBounds(10, 190, 70, 35);
-    frmCalculator.getContentPane().add(btn0);
-    
-    btnDecimalPoint = new JButton(".");
-    btnDecimalPoint.setFocusTraversalKeysEnabled(false);
-    btnDecimalPoint.setFocusable(false);
-    btnDecimalPoint.addActionListener(new ActionListener() {
-      public void actionPerformed(ActionEvent e) {
-        appendText(btnDecimalPoint.getText());
-      }
-    });
-    btnDecimalPoint.setFont(new Font("Tahoma", Font.PLAIN, 16));
-    btnDecimalPoint.setBounds(90, 190, 70, 35);
-    frmCalculator.getContentPane().add(btnDecimalPoint);
-    
+    this.btnDecimalPoint.setFont(this.commonFont);
+    this.btnDecimalPoint.setBounds(90, 190, 70, 35);
+    this.frmCalculator.getContentPane().add(this.btnDecimalPoint);
+
     JButton btnClear = new JButton("C");
     btnClear.setFocusTraversalKeysEnabled(false);
     btnClear.setFocusable(false);
     btnClear.addActionListener(new ActionListener() {
+
+      @Override
       public void actionPerformed(ActionEvent arg0) {
-        clear();
+        GUI.this.clear();
       }
     });
-    btnClear.setFont(new Font("Tahoma", Font.PLAIN, 16));
+    btnClear.setFont(this.commonFont);
     btnClear.setBounds(330, 53, 70, 35);
-    frmCalculator.getContentPane().add(btnClear);
-    
+    this.frmCalculator.getContentPane().add(btnClear);
+
     JButton btnBack = new JButton("<-");
     btnBack.setFocusTraversalKeysEnabled(false);
     btnBack.setFocusable(false);
     btnBack.addActionListener(new ActionListener() {
+
+      @Override
       public void actionPerformed(ActionEvent e) {
-        back();
+        GUI.this.back();
       }
     });
-    btnBack.setFont(new Font("Tahoma", Font.PLAIN, 16));
+    btnBack.setFont(this.commonFont);
     btnBack.setBounds(250, 53, 70, 35);
-    frmCalculator.getContentPane().add(btnBack);
-    
-    btnMultiply = new JButton("*");
-    btnMultiply.setFocusTraversalKeysEnabled(false);
-    btnMultiply.setFocusable(false);
-    btnMultiply.addActionListener(new ActionListener() {
+    this.frmCalculator.getContentPane().add(btnBack);
+
+    this.btnMultiply = new JButton("*");
+    this.btnMultiply.setFocusTraversalKeysEnabled(false);
+    this.btnMultiply.setFocusable(false);
+    this.btnMultiply.addActionListener(new ActionListener() {
+
+      @Override
       public void actionPerformed(ActionEvent e) {
-        appendText(btnMultiply.getText());
+        GUI.this.appendText(GUI.this.btnMultiply.getText());
       }
     });
-    btnMultiply.setFont(new Font("Tahoma", Font.PLAIN, 16));
-    btnMultiply.setBounds(250, 98, 70, 35);
-    frmCalculator.getContentPane().add(btnMultiply);
-    
-    btnDivide = new JButton("/");
-    btnDivide.setFocusTraversalKeysEnabled(false);
-    btnDivide.setFocusable(false);
-    btnDivide.addActionListener(new ActionListener() {
+    this.btnMultiply.setFont(this.commonFont);
+    this.btnMultiply.setBounds(250, 98, 70, 35);
+    this.frmCalculator.getContentPane().add(this.btnMultiply);
+
+    this.btnDivide = new JButton("/");
+    this.btnDivide.setFocusTraversalKeysEnabled(false);
+    this.btnDivide.setFocusable(false);
+    this.btnDivide.addActionListener(new ActionListener() {
+
+      @Override
       public void actionPerformed(ActionEvent e) {
-        appendText(btnDivide.getText());
+        GUI.this.appendText(GUI.this.btnDivide.getText());
       }
     });
-    btnDivide.setFont(new Font("Tahoma", Font.PLAIN, 16));
-    btnDivide.setBounds(330, 98, 70, 35);
-    frmCalculator.getContentPane().add(btnDivide);
-    
-    btnAdd = new JButton("+");
-    btnAdd.setFocusTraversalKeysEnabled(false);
-    btnAdd.setFocusable(false);
-    btnAdd.addActionListener(new ActionListener() {
+    this.btnDivide.setFont(this.commonFont);
+    this.btnDivide.setBounds(330, 98, 70, 35);
+    this.frmCalculator.getContentPane().add(this.btnDivide);
+
+    this.btnAdd = new JButton("+");
+    this.btnAdd.setFocusTraversalKeysEnabled(false);
+    this.btnAdd.setFocusable(false);
+    this.btnAdd.addActionListener(new ActionListener() {
+
+      @Override
       public void actionPerformed(ActionEvent e) {
-        appendText(btnAdd.getText());
+        GUI.this.appendText(GUI.this.btnAdd.getText());
       }
     });
-    btnAdd.setFont(new Font("Tahoma", Font.PLAIN, 16));
-    btnAdd.setBounds(250, 144, 70, 35);
-    frmCalculator.getContentPane().add(btnAdd);
-    
-    btnSubtract = new JButton("-");
-    btnSubtract.setFocusTraversalKeysEnabled(false);
-    btnSubtract.setFocusable(false);
-    btnSubtract.addActionListener(new ActionListener() {
+    this.btnAdd.setFont(this.commonFont);
+    this.btnAdd.setBounds(250, 144, 70, 35);
+    this.frmCalculator.getContentPane().add(this.btnAdd);
+
+    this.btnSubtract = new JButton("-");
+    this.btnSubtract.setFocusTraversalKeysEnabled(false);
+    this.btnSubtract.setFocusable(false);
+    this.btnSubtract.addActionListener(new ActionListener() {
+
+      @Override
       public void actionPerformed(ActionEvent e) {
-        appendText(btnSubtract.getText());
+        GUI.this.appendText(GUI.this.btnSubtract.getText());
       }
     });
-    btnSubtract.setFont(new Font("Tahoma", Font.PLAIN, 16));
-    btnSubtract.setBounds(330, 144, 70, 35);
-    frmCalculator.getContentPane().add(btnSubtract);
-    
-    btnSpace = new JButton("Space");
-    btnSpace.setFocusTraversalKeysEnabled(false);
-    btnSpace.setFocusable(false);
-    btnSpace.addActionListener(new ActionListener() {
+    this.btnSubtract.setFont(this.commonFont);
+    this.btnSubtract.setBounds(330, 144, 70, 35);
+    this.frmCalculator.getContentPane().add(this.btnSubtract);
+
+    this.btnSpace = new JButton("Space");
+    this.btnSpace.setFocusTraversalKeysEnabled(false);
+    this.btnSpace.setFocusable(false);
+    this.btnSpace.addActionListener(new ActionListener() {
+
+      @Override
       public void actionPerformed(ActionEvent e) {
-        appendText(" ");
+        GUI.this.appendText(" ");
       }
     });
-    btnSpace.setFont(new Font("Tahoma", Font.PLAIN, 16));
-    btnSpace.setBounds(250, 190, 150, 35);
-    frmCalculator.getContentPane().add(btnSpace);
-  }
-  
-  private void calculate() {
-    String input = this.txtInputOutput.getText();
-    PostfixEvaluator evaluator = new PostfixEvaluator(input);
-    
-    double answer = 0.0;
-    try {
-      answer = evaluator.getResult();
-    }
-    catch (Exception e) {
-      JOptionPane.showMessageDialog(null, e.getMessage(), "Error", JOptionPane.WARNING_MESSAGE);
-    }
-    
-    String output = null;
-    
-    NumberFormat nf;
-    if (Utility.isWholeNumber(answer)) {
-      nf = NumberFormat.getIntegerInstance();
-    }
-    else {
-      nf = NumberFormat.getInstance();
-    }
-    nf.setGroupingUsed(false);
-    output = nf.format(answer);
-    
-    this.txtInputOutput.setText(output);
-  }
-  
-  private void clear() {
-    this.txtInputOutput.setText(null);
-  }
-  
-  private void back() {
-    String currentText = this.txtInputOutput.getText();
-    if (!currentText.isEmpty()) {
-      currentText = currentText.substring(0, currentText.length() - 1);
-      this.txtInputOutput.setText(currentText);
-    }
-  }
-  
-  private void appendText(String newText) {
-    String currentText = this.txtInputOutput.getText();
-    currentText += newText;
-    this.txtInputOutput.setText(currentText);
+    this.btnSpace.setFont(this.commonFont);
+    this.btnSpace.setBounds(250, 190, 150, 35);
+    this.frmCalculator.getContentPane().add(this.btnSpace);
   }
 
   /**
-   * @param e
-   *
-   * @see java.awt.event.KeyListener#keyTyped(java.awt.event.KeyEvent)
+   * Launch the application.
    */
-  /*
-  @Override
-  public void keyTyped(KeyEvent e) {
-    char key = e.getKeyChar();
-    System.out.println(key);
+  public static void main(String[] args) {
+    EventQueue.invokeLater(new Runnable() {
+
+      @Override
+      public void run() {
+        try {
+          GUI window = new GUI();
+          window.frmCalculator.setVisible(true);
+        }
+        catch (Exception e) {
+          e.printStackTrace();
+        }
+      }
+    });
   }
-  */
 }
