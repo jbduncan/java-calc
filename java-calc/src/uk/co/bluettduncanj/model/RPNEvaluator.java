@@ -15,14 +15,14 @@ import kip.util.BigFraction;
  */
 public class RPNEvaluator {
   
-  private static final String INVALID = "Invalid";
+  private static final String INVALID   = "Invalid";
   private static final String UNDEFINED = "Undefined";
   
-  private List<String> expr;
-  private Deque<BigFraction> stack;
+  private List<String>        expr;
+  private Deque<BigFraction>  stack;
   
   public RPNEvaluator(List<String> expr) {
-    this.expr = expr;
+    this.expr  = expr;
     this.stack = new ArrayDeque<BigFraction>(expr.size());
   }
   
@@ -33,26 +33,24 @@ public class RPNEvaluator {
    * @throws NumberFormatException, IllegalArgumentException, ArithmeticException
    */
   public String evaluate() {
+    
     if (!stack.isEmpty()) stack.clear();
+    
     for (String token : expr) {
       switch (token) {
-      case "+": 
-        add(); 
-        break;
-      case "-": 
-        subtract();
-        break;
-      case "*":
-        multiply();
-        break;
-      case "/":
-        divide();
-        break;
-      default:
-        // Interpret as a number
-        stack.push(BigFraction.valueOf(token));
+        case "+":  
+          add();      break;
+        case "-":  
+          subtract(); break;
+        case "*":  
+          multiply(); break;
+        case "/":  
+          divide();   break;
+        default:
+          stack.push(BigFraction.valueOf(token));
       }
     }
+    
     return stack.pop().toBigDecimal().toString();
   }
   
