@@ -23,7 +23,7 @@ public class RPNEvaluator {
   
   public RPNEvaluator(List<String> expr) {
     this.expr  = expr;
-    this.stack = new ArrayDeque<BigFraction>(expr.size());
+    this.stack = new ArrayDeque<BigFraction>();
   }
   
   /**
@@ -95,5 +95,7 @@ public class RPNEvaluator {
       stack.push(b.divide(a));
     }
   }
+  
+  
   
 }

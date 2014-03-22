@@ -1,5 +1,5 @@
 /**
- * Evaluator.java
+ * InfixEvaluator.java
  */
 
 package uk.co.bluettduncanj.model;
@@ -14,12 +14,12 @@ import java.util.Map;
 /**
  * @author Jonathan Bluett-Duncan
  */
-public class Evaluator {
+public class InfixEvaluator {
 
   private static final Map<String, OperatorInfo> OPERATORS;
   private List<String>                           expr;
-  private List<String>                           outputQueue;
   private Deque<String>                          operatorStack;
+  private List<String>                           outputQueue;
 
   static {
     OPERATORS = new HashMap<String, OperatorInfo>();
@@ -29,10 +29,10 @@ public class Evaluator {
     OPERATORS.put("/", new OperatorInfo(Precedence.MULTIPLICATIVE, Associativity.LEFT));
   }
 
-  public Evaluator(List<String> expr) {
+  public InfixEvaluator(List<String> expr) {
     this.expr = expr;
-    this.outputQueue = new ArrayList<String>(expr.size());
-    this.operatorStack = new ArrayDeque<String>(expr.size());
+    this.operatorStack = new ArrayDeque<String>();
+    this.outputQueue = new ArrayList<String>();
   }
 
   /**
@@ -41,15 +41,18 @@ public class Evaluator {
    * @return the result of <code>expr</code>.
    */
   public String evaluate() {
-    List<String> rpnExpr = shuntingYard();
-    RPNEvaluator r = new RPNEvaluator(rpnExpr);
+    shunt();
+    RPNEvaluator r = new RPNEvaluator(outputQueue);
     return r.evaluate();
   }
 
-  private List<String> shuntingYard() {
+  private void shunt() {
+    
     outputQueue.clear();
     operatorStack.clear();
+    
     for (String token : expr) {
+      
       if (isNumeric(token)) {
         outputQueue.add(token);
       }
@@ -67,7 +70,7 @@ public class Evaluator {
         operatorStack.push(token);
       }
       else if (")".equals(token)) {
-        while (!"(".equals(operatorStack.peek())) {
+        while (!("(".equals(operatorStack.peek()))) {
 
           if (operatorStack.isEmpty()) {
             throw new IllegalArgumentException("Mismatched parenthesis in input");
@@ -81,16 +84,17 @@ public class Evaluator {
       else {
         throw new IllegalArgumentException(String.format("Invalid token: %s", token));
       }
+      
     }
-    while (!operatorStack.isEmpty()) {
+    
+    while (!(operatorStack.isEmpty())) {
       String o = operatorStack.peek();
       if ("(".equals(o) || ")".equals(o)) {
         throw new IllegalArgumentException("Invalid expression");
       }
       outputQueue.add(operatorStack.pop());
     }
-
-    return outputQueue;
+    
   }
 
   private boolean isNumeric(String s) {
@@ -121,66 +125,6 @@ public class Evaluator {
     Precedence p1 = OPERATORS.get(o1).getPrecedence();
     Precedence p2 = OPERATORS.get(o2).getPrecedence();
     return p1.isLessPrecedence(p2);
-  }
-
-  /**
-   * @return
-   * 
-   * @see java.lang.Object#hashCode()
-   */
-  @Override
-  public int hashCode() {
-    final int prime = 31;
-    int result = 1;
-    result = prime * result + ((this.expr == null) ? 0 : this.expr.hashCode());
-    result = prime * result + ((this.operatorStack == null) ? 0 : this.operatorStack.hashCode());
-    result = prime * result + ((this.outputQueue == null) ? 0 : this.outputQueue.hashCode());
-    return result;
-  }
-
-  /**
-   * @param obj
-   * @return
-   * 
-   * @see java.lang.Object#equals(java.lang.Object)
-   */
-  @Override
-  public boolean equals(Object obj) {
-    if (this == obj) {
-      return true;
-    }
-    if (obj == null) {
-      return false;
-    }
-    if (!(obj instanceof Evaluator)) {
-      return false;
-    }
-    Evaluator other = (Evaluator) obj;
-    if (this.expr == null) {
-      if (other.expr != null) {
-        return false;
-      }
-    }
-    else if (!this.expr.equals(other.expr)) {
-      return false;
-    }
-    if (this.operatorStack == null) {
-      if (other.operatorStack != null) {
-        return false;
-      }
-    }
-    else if (!this.operatorStack.equals(other.operatorStack)) {
-      return false;
-    }
-    if (this.outputQueue == null) {
-      if (other.outputQueue != null) {
-        return false;
-      }
-    }
-    else if (!this.outputQueue.equals(other.outputQueue)) {
-      return false;
-    }
-    return true;
   }
 
 }

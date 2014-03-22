@@ -17,8 +17,6 @@ import javax.swing.plaf.metal.DefaultMetalTheme;
 import javax.swing.plaf.metal.MetalLookAndFeel;
 import javax.swing.plaf.metal.OceanTheme;
 
-import org.jdesktop.xswingx.PromptSupport;
-
 import java.awt.Font;
 
 import javax.swing.JButton;
@@ -123,7 +121,6 @@ public class GUI {
     txtResult.setBackground(UIManager.getColor("TextField.background"));
     txtResult.setFont(new Font("Segoe UI Semibold", Font.PLAIN, 21));
     txtResult.setHorizontalAlignment(SwingConstants.TRAILING);
-    PromptSupport.setPrompt("0", txtResult);
     frmJcalculator.getContentPane().add(txtResult, "cell 0 1 5 1,growx");
     txtResult.setColumns(10);
 
