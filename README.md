@@ -1,20 +1,14 @@
-Java Calculator
-=========
+JCalculator
+================
 
-A Java desktop calculator.
+JCalculator is a desktop calculator program written in Java.
 
-This is a personal project of mine I started in the summer of 2013 before my 2nd year at university.
+It is a personal project of mine that I started during my time at university.
 
-Development
-=========
-
-The IDE used to create java-calc is Eclipse with the WindowBuilder Pro plugin.
-
-This is by no means a finished piece of work - it is neither feature complete nor guaranteed to be bug-free.
+Please note this is not a mature project. I am still learning how to best use Java practices to improve this program, so it is by no means guaranteed to be bug-free.
 
 License
-=========
+================
 
-All the code in this respository is licensed under the permissive MIT license (see LICENSE.txt). 
-
+JCalculator is distributed under the permissive MIT licence. Please see LICENCE.txt for more details.
 
