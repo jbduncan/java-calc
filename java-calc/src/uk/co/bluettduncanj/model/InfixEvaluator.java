@@ -11,47 +11,29 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.lrdev.bn.BigRational;
+
 /**
  * @author Jonathan Bluett-Duncan
  */
 public class InfixEvaluator {
 
-  private static final Map<String, OperatorInfo> OPERATORS;
-  private List<String>                           expr;
-  private Deque<String>                          operatorStack;
-  private List<String>                           outputQueue;
+  private static final Map<String, OperatorInfo> OPERATORS = getOperators();
 
-  static {
-    OPERATORS = new HashMap<String, OperatorInfo>();
-    OPERATORS.put("+", new OperatorInfo(Precedence.ADDITIVE, Associativity.LEFT));
-    OPERATORS.put("-", new OperatorInfo(Precedence.ADDITIVE, Associativity.LEFT));
-    OPERATORS.put("*", new OperatorInfo(Precedence.MULTIPLICATIVE, Associativity.LEFT));
-    OPERATORS.put("/", new OperatorInfo(Precedence.MULTIPLICATIVE, Associativity.LEFT));
+  private InfixEvaluator() {}
+  
+  public static BigRational evaluate(List<String> expression) {
+    List<String> rpnExpression = shunt(expression);
+    BigRational result = RPNEvaluator.evaluate(rpnExpression);
+    return result;
   }
 
-  public InfixEvaluator(List<String> expr) {
-    this.expr = expr;
-    this.operatorStack = new ArrayDeque<String>();
-    this.outputQueue = new ArrayList<String>();
-  }
-
-  /**
-   * Evaluates the mathematical infix expression <code>expr</code> and returns the result as a String.
-   * 
-   * @return the result of <code>expr</code>.
-   */
-  public String evaluate() {
-    shunt();
-    RPNEvaluator r = new RPNEvaluator(outputQueue);
-    return r.evaluate();
-  }
-
-  private void shunt() {
+  private static List<String> shunt(List<String> infixExpression) {
     
-    outputQueue.clear();
-    operatorStack.clear();
+    List<String> outputQueue = new ArrayList<String>();
+    Deque<String> operatorStack = new ArrayDeque<String>();
     
-    for (String token : expr) {
+    for (String token : infixExpression) {
       
       if (isNumeric(token)) {
         outputQueue.add(token);
@@ -60,7 +42,7 @@ public class InfixEvaluator {
         String o1 = token;
         String o2;
         while (isOperator(o2 = operatorStack.peek())) {
-          if ((isLeftAssociative(o1) && haveEqualPrecedence(o1, o2)) || haveLessPrecedence(o1, o2)) {
+          if ((isLeftAssociative(o1) && isEqualPrecedence(o1, o2)) || isLessPrecedence(o1, o2)) {
             outputQueue.add(operatorStack.pop());
           }
         }
@@ -95,9 +77,11 @@ public class InfixEvaluator {
       outputQueue.add(operatorStack.pop());
     }
     
+    return outputQueue;
+    
   }
 
-  private boolean isNumeric(String s) {
+  private static boolean isNumeric(String s) {
     try {
       Double.parseDouble(s);
     }
@@ -107,24 +91,33 @@ public class InfixEvaluator {
     return true;
   }
 
-  private boolean isOperator(String s) {
+  private static boolean isOperator(String s) {
     return OPERATORS.containsKey(s);
   }
 
-  private boolean isLeftAssociative(String o) {
+  private static boolean isLeftAssociative(String o) {
     return OPERATORS.get(o).getAssociativity() == Associativity.LEFT;
   }
 
-  private boolean haveEqualPrecedence(String o1, String o2) {
+  private static boolean isEqualPrecedence(String o1, String o2) {
     Precedence p1 = OPERATORS.get(o1).getPrecedence();
     Precedence p2 = OPERATORS.get(o2).getPrecedence();
     return p1.equalsPrecedence(p2);
   }
 
-  private boolean haveLessPrecedence(String o1, String o2) {
+  private static boolean isLessPrecedence(String o1, String o2) {
     Precedence p1 = OPERATORS.get(o1).getPrecedence();
     Precedence p2 = OPERATORS.get(o2).getPrecedence();
     return p1.isLessPrecedence(p2);
+  }
+  
+  private static Map<String, OperatorInfo> getOperators() {
+    Map<String, OperatorInfo> operators = new HashMap<String, OperatorInfo>();
+    operators.put("+", new OperatorInfo(Precedence.ADDITIVE, Associativity.LEFT));
+    operators.put("-", new OperatorInfo(Precedence.ADDITIVE, Associativity.LEFT));
+    operators.put("*", new OperatorInfo(Precedence.MULTIPLICATIVE, Associativity.LEFT));
+    operators.put("/", new OperatorInfo(Precedence.MULTIPLICATIVE, Associativity.LEFT));
+    return operators;
   }
 
 }

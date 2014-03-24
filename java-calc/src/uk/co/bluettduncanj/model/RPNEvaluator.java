@@ -7,7 +7,8 @@ package uk.co.bluettduncanj.model;
 import java.util.ArrayDeque;
 import java.util.Deque;
 import java.util.List;
-import kip.util.BigFraction;
+
+import com.lrdev.bn.BigRational;
 
 
 /**
@@ -18,25 +19,24 @@ public class RPNEvaluator {
   private static final String INVALID   = "Invalid";
   private static final String UNDEFINED = "Undefined";
   
-  private List<String>        expr;
-  private Deque<BigFraction>  stack;
+  private List<String>        expression;
+  private Deque<BigRational>  stack;
   
-  public RPNEvaluator(List<String> expr) {
-    this.expr  = expr;
-    this.stack = new ArrayDeque<BigFraction>();
+  private RPNEvaluator(List<String> expression) {
+    this.expression = expression;
+    this.stack = new ArrayDeque<BigRational>();
   }
   
-  /**
-   * 
-   * @return
-   * 
-   * @throws NumberFormatException, IllegalArgumentException, ArithmeticException
-   */
-  public String evaluate() {
+  public static BigRational evaluate(List<String> expression) {
+    RPNEvaluator r = new RPNEvaluator(expression);
+    return r.doEvaluation();
+  }
+  
+  private BigRational doEvaluation() {
     
-    if (!stack.isEmpty()) stack.clear();
+    stack.clear();
     
-    for (String token : expr) {
+    for (String token : expression) {
       switch (token) {
         case "+":  
           add();      break;
@@ -47,19 +47,21 @@ public class RPNEvaluator {
         case "/":  
           divide();   break;
         default:
-          stack.push(BigFraction.valueOf(token));
+          stack.push(new BigRational(token));
       }
     }
     
-    return stack.pop().toBigDecimal().toString();
+    BigRational result = stack.pop();
+    return result;
+    
   }
   
   private void add() {
     if (stack.size() < 2) {
       throw new IllegalArgumentException(INVALID);
     }
-    BigFraction a = stack.pop();
-    BigFraction b = stack.pop();
+    BigRational a = stack.pop();
+    BigRational b = stack.pop();
     stack.push(a.add(b));
   }
   
@@ -67,8 +69,8 @@ public class RPNEvaluator {
     if (stack.size() < 2) {
       throw new IllegalArgumentException(INVALID);
     }
-    BigFraction a = stack.pop();
-    BigFraction b = stack.pop();
+    BigRational a = stack.pop();
+    BigRational b = stack.pop();
     stack.push(b.subtract(a));
   }
   
@@ -76,8 +78,8 @@ public class RPNEvaluator {
     if (stack.size() < 2) {
       throw new IllegalArgumentException(INVALID);
     }
-    BigFraction a = stack.pop();
-    BigFraction b = stack.pop();
+    BigRational a = stack.pop();
+    BigRational b = stack.pop();
     stack.push(a.multiply(b));
   }
   
@@ -85,17 +87,18 @@ public class RPNEvaluator {
     if (stack.size() < 2) {
       throw new IllegalArgumentException(INVALID);
     }
-    BigFraction a = stack.pop();
-    BigFraction b = stack.pop();
-    if (a.equals(BigFraction.ZERO) && b.equals(BigFraction.ZERO)) {
+
+    BigRational a = stack.pop();
+    BigRational b = stack.pop();
+    if (a.equals(BigRational.ZERO) && b.equals(BigRational.ZERO)) {
       throw new ArithmeticException(UNDEFINED);
-    } else if (a.equals(BigFraction.ZERO)) {
+    } 
+    else if (a.equals(BigRational.ZERO)) {
       throw new ArithmeticException(UNDEFINED);
-    } else {
+    } 
+    else {
       stack.push(b.divide(a));
     }
   }
-  
-  
   
 }

@@ -2,9 +2,7 @@
  * RPNEvaluatorTest.java
  */
 
-package uk.co.bluettduncanj;
-
-import static org.junit.Assert.*;
+package uk.co.bluettduncanj.model;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -22,8 +20,7 @@ import uk.co.bluettduncanj.model.RPNEvaluator;
  */
 public class RPNEvaluatorTest {
 
-  private static List<List<String>> testData;
-  private static List<String> expectedResults;
+  private List<List<String>> testData;
   
   /**
    * @throws java.lang.Exception
@@ -52,29 +49,7 @@ public class RPNEvaluatorTest {
     testData.add(Arrays.asList("1", "2", "*", "3", "*", "4", "*"));
     testData.add(Arrays.asList("1", "2", "/"));
     testData.add(Arrays.asList("10", "2", "/", "2", "/"));
-    
-    expectedResults = new ArrayList<String>();
-    expectedResults.add("15");
-    expectedResults.add("7");
-    expectedResults.add("-5");
-    expectedResults.add("0.9");
-    expectedResults.add("10");
-    expectedResults.add("10");
-    expectedResults.add("0");
-    expectedResults.add("3");
-    expectedResults.add("-3");
-    expectedResults.add("15");
-    expectedResults.add("0.7");
-    expectedResults.add("1");
-    expectedResults.add("25");
-    expectedResults.add("-25");
-    expectedResults.add("25");
-    expectedResults.add("0");
-    expectedResults.add("0");
-    expectedResults.add("24");
-    expectedResults.add("24");
-    expectedResults.add("0.5");
-    expectedResults.add("2.5");
+    testData.add(Arrays.asList("1", "3", "/", "3", "*"));
   }
 
   /**
@@ -89,20 +64,16 @@ public class RPNEvaluatorTest {
    */
   @Test
   public void testEvaluate() {
-    /*
-    List<String> input = Arrays.asList("5", "10", "+");
-    PostfixEvaluator p = new PostfixEvaluator(input);
-    double output = p.evaluate();
-    assertEquals("Unexpected result.", 15.0, output, 0);
-    */
     
-    for (int i = 0; i < testData.size(); i++) {
-      RPNEvaluator p = new RPNEvaluator(testData.get(i));
-      //double output = p.evaluate();
-      String output = p.evaluate();
-      assertEquals("Unexpected result", expectedResults.get(i), output);
-      System.out.println(expectedResults.get(i) + " == " + output);
+    long begin = System.currentTimeMillis();
+    long end;
+    
+    for (List<String> data : testData) {
+      System.out.println(data + " = " + RPNEvaluator.evaluate(data).toString());
     }
+    
+    end = System.currentTimeMillis();
+    System.out.println("Total time taken: " + (end - begin) + " milliseconds.");
   }
 
 }
