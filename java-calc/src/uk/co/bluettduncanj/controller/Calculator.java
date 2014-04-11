@@ -4,7 +4,6 @@
 
 package uk.co.bluettduncanj.controller;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import com.lrdev.bn.BigRational;
@@ -17,21 +16,18 @@ import uk.co.bluettduncanj.model.InfixEvaluator;
  */
 public class Calculator {
   
-  private BigRational previousAnswer;
+  private BigRational  ans;
   
-  public BigRational evaluate(String expression) {
-    
-    List<String> tokenisedExpression = splitIntoTokens(expression);
-    BigRational answer = InfixEvaluator.evaluate(tokenisedExpression);
-    previousAnswer = answer;
-    return answer;
-    
+  
+  public Calculator evaluate(List<String> expression) {
+    ans = InfixEvaluator.evaluate(expression);
+    return this;
   }
   
-  private List<String> splitIntoTokens(String expression) {
-    // TODO: Implement a state machine here?
-    
-    return new ArrayList<String>();
+  public String toString() {
+    // TODO: Return the answer in an appropriate String format.
+    // STUB
+    return ans.toString();
   }
   
 }

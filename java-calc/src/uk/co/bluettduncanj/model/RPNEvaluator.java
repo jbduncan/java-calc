@@ -19,35 +19,29 @@ public class RPNEvaluator {
   private static final String INVALID   = "Invalid";
   private static final String UNDEFINED = "Undefined";
   
-  private List<String>        expression;
-  private Deque<BigRational>  stack;
-  
-  private RPNEvaluator(List<String> expression) {
-    this.expression = expression;
-    this.stack = new ArrayDeque<BigRational>();
-  }
+  private RPNEvaluator() {}
   
   public static BigRational evaluate(List<String> expression) {
-    RPNEvaluator r = new RPNEvaluator(expression);
-    return r.doEvaluation();
-  }
-  
-  private BigRational doEvaluation() {
     
-    stack.clear();
+    Deque<BigRational> stack = new ArrayDeque<BigRational>();
     
     for (String token : expression) {
+      
       switch (token) {
-        case "+":  
-          add();      break;
-        case "-":  
-          subtract(); break;
-        case "*":  
-          multiply(); break;
-        case "/":  
-          divide();   break;
-        default:
-          stack.push(new BigRational(token));
+      case "+":  
+        add(stack);
+        break;
+      case "-":  
+        subtract(stack);
+        break;
+      case "*":  
+        multiply(stack);
+        break;
+      case "/":  
+        divide(stack);
+        break;
+      default:
+        stack.push(new BigRational(token));
       }
     }
     
@@ -56,7 +50,7 @@ public class RPNEvaluator {
     
   }
   
-  private void add() {
+  private static void add(Deque<BigRational> stack) {
     if (stack.size() < 2) {
       throw new IllegalArgumentException(INVALID);
     }
@@ -65,7 +59,7 @@ public class RPNEvaluator {
     stack.push(a.add(b));
   }
   
-  private void subtract() {
+  private static void subtract(Deque<BigRational> stack) {
     if (stack.size() < 2) {
       throw new IllegalArgumentException(INVALID);
     }
@@ -74,7 +68,7 @@ public class RPNEvaluator {
     stack.push(b.subtract(a));
   }
   
-  private void multiply() {
+  private static void multiply(Deque<BigRational> stack) {
     if (stack.size() < 2) {
       throw new IllegalArgumentException(INVALID);
     }
@@ -83,7 +77,7 @@ public class RPNEvaluator {
     stack.push(a.multiply(b));
   }
   
-  private void divide() {
+  private static void divide(Deque<BigRational> stack) {
     if (stack.size() < 2) {
       throw new IllegalArgumentException(INVALID);
     }
