@@ -4,6 +4,7 @@
 
 package uk.co.bluettduncanj.controller;
 
+import java.math.MathContext;
 import java.util.List;
 
 import com.lrdev.bn.BigRational;
@@ -16,18 +17,22 @@ import uk.co.bluettduncanj.model.InfixEvaluator;
  */
 public class Calculator {
   
-  private BigRational  ans;
-  
+  private BigRational ans;
   
   public Calculator evaluate(List<String> expression) {
-    ans = InfixEvaluator.evaluate(expression);
+    InfixEvaluator evaluator = new InfixEvaluator();
+    ans = evaluator.evaluate(expression);
     return this;
   }
   
-  public String toString() {
+  public String asString() {
     // TODO: Return the answer in an appropriate String format.
     // STUB
-    return ans.toString();
+    return ans.bigDecimalValue(MathContext.DECIMAL64.getPrecision() + 2).toString();
+  }
+  
+  public BigRational asBigRational() {
+    return ans;
   }
   
 }

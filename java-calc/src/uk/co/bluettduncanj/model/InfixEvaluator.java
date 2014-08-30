@@ -18,17 +18,17 @@ import com.lrdev.bn.BigRational;
  */
 public class InfixEvaluator {
 
-  private static final Map<String, OperatorInfo> OPERATORS = getOperators();
+  private final Map<String, OperatorInfo> operators = createOperators();
 
-  private InfixEvaluator() {}
+  public InfixEvaluator() {}
   
-  public static BigRational evaluate(List<String> expression) {
+  public BigRational evaluate(List<String> expression) {
     List<String> rpnExpression = shunt(expression);
     BigRational result = RPNEvaluator.evaluate(rpnExpression);
     return result;
   }
 
-  private static List<String> shunt(List<String> infixExpression) {
+  private List<String> shunt(List<String> infixExpression) {
     
     List<String> outputQueue = new ArrayList<String>();
     Deque<String> operatorStack = new ArrayDeque<String>();
@@ -81,7 +81,7 @@ public class InfixEvaluator {
     
   }
 
-  private static boolean isNumeric(String s) {
+  private boolean isNumeric(String s) {
     try {
       Double.parseDouble(s);
     }
@@ -91,27 +91,27 @@ public class InfixEvaluator {
     return true;
   }
 
-  private static boolean isOperator(String s) {
-    return OPERATORS.containsKey(s);
+  private boolean isOperator(String s) {
+    return this.operators.containsKey(s);
   }
 
-  private static boolean isLeftAssociative(String o) {
-    return OPERATORS.get(o).getAssociativity() == Associativity.LEFT;
+  private boolean isLeftAssociative(String o) {
+    return this.operators.get(o).getAssociativity() == Associativity.LEFT;
   }
 
-  private static boolean isEqualPrecedence(String o1, String o2) {
-    Precedence p1 = OPERATORS.get(o1).getPrecedence();
-    Precedence p2 = OPERATORS.get(o2).getPrecedence();
+  private boolean isEqualPrecedence(String o1, String o2) {
+    Precedence p1 = this.operators.get(o1).getPrecedence();
+    Precedence p2 = this.operators.get(o2).getPrecedence();
     return p1.equalsPrecedence(p2);
   }
 
-  private static boolean isLessPrecedence(String o1, String o2) {
-    Precedence p1 = OPERATORS.get(o1).getPrecedence();
-    Precedence p2 = OPERATORS.get(o2).getPrecedence();
+  private boolean isLessPrecedence(String o1, String o2) {
+    Precedence p1 = this.operators.get(o1).getPrecedence();
+    Precedence p2 = this.operators.get(o2).getPrecedence();
     return p1.isLessPrecedence(p2);
   }
   
-  private static Map<String, OperatorInfo> getOperators() {
+  private static Map<String, OperatorInfo> createOperators() {
     Map<String, OperatorInfo> operators = new HashMap<String, OperatorInfo>();
     operators.put("+", new OperatorInfo(Precedence.ADDITIVE, Associativity.LEFT));
     operators.put("-", new OperatorInfo(Precedence.ADDITIVE, Associativity.LEFT));

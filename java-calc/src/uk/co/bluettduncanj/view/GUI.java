@@ -4,26 +4,24 @@
 
 package uk.co.bluettduncanj.view;
 
+import java.awt.Font;
+
+import javax.swing.JButton;
 import javax.swing.JFrame;
+import javax.swing.JMenu;
+import javax.swing.JMenuBar;
+import javax.swing.JMenuItem;
+import javax.swing.JSeparator;
+import javax.swing.JTextField;
+import javax.swing.SwingConstants;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
-
-import net.miginfocom.swing.MigLayout;
-
-import javax.swing.JTextField;
-import javax.swing.SwingConstants;
 import javax.swing.plaf.metal.DefaultMetalTheme;
 import javax.swing.plaf.metal.MetalLookAndFeel;
 import javax.swing.plaf.metal.OceanTheme;
 
-import java.awt.Font;
-
-import javax.swing.JButton;
-import javax.swing.JMenuBar;
-import javax.swing.JMenuItem;
-import javax.swing.JMenu;
-import javax.swing.JSeparator;
+import net.miginfocom.swing.MigLayout;
 
 /**
  * @author Jonathan Bluett-Duncan
@@ -45,22 +43,22 @@ public class GUI {
   private JFrame      frmJcalculator;
   private JTextField  txtExpression;
   private JTextField  txtResult;
-  private JButton     btn7;
-  private JButton     btn8;
-  private JButton     btn9;
-  private JButton     btnBackspace;
-  private JButton     btnClear;
-  private JButton     btn4;
-  private JButton     btn5;
-  private JButton     btn6;
-  private JButton     btnMultiply;
-  private JButton     btnDivide;
   private JButton     btn1;
   private JButton     btn2;
   private JButton     btn3;
+  private JButton     btn4;
+  private JButton     btn5;
+  private JButton     btn6;
+  private JButton     btn7;
+  private JButton     btn8;
+  private JButton     btn9;
+  private JButton     btn0;
+  private JButton     btnBackspace;
+  private JButton     btnClear;
   private JButton     btnAdd;
   private JButton     btnSubtract;
-  private JButton     btn0;
+  private JButton     btnMultiply;
+  private JButton     btnDivide;
   private JButton     btnDecimalPlace;
   private JButton     btnEquals;
   private JMenuBar    menuBar;
@@ -73,155 +71,138 @@ public class GUI {
   private JMenuItem   mntmQuit;
 
   /**
-   * Launch the application.
-   */
-  public static void main(String[] args) {
-    SwingUtilities.invokeLater(new Runnable() {
-
-      public void run() {
-        try {
-          GUI window = new GUI();
-          window.frmJcalculator.setVisible(true);
-        }
-        catch (Exception e) {
-          e.printStackTrace();
-        }
-      }
-    });
-  }
-
-  /**
    * Create the application.
    */
   public GUI() {
     initLookAndFeel();
-    initialize();
+    this.initialize();
   }
 
   /**
    * Initialize the contents of the frame.
    */
   private void initialize() {
-    frmJcalculator = new JFrame();
-    frmJcalculator.setTitle("JCalculator");
-    frmJcalculator.setBounds(100, 100, 361, 276);
-    frmJcalculator.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-    frmJcalculator.getContentPane().setLayout(new MigLayout("", "[grow]", "[][][grow][grow][grow][grow]"));
+    this.frmJcalculator = new JFrame();
+    this.frmJcalculator.setResizable(false);
+    this.frmJcalculator.setTitle("JCalculator");
+    this.frmJcalculator.setBounds(100, 100, 361, 276);
+    this.frmJcalculator.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+    this.frmJcalculator.getContentPane().setLayout(new MigLayout("", "[grow]", "[][][grow][grow][grow][grow]"));
 
-    txtExpression = new JTextField();
-    txtExpression.setEditable(false);
-    txtExpression.setBackground(UIManager.getColor("TextField.background"));
-    txtExpression.setFont(new Font("Segoe UI", Font.PLAIN, 13));
-    txtExpression.setHorizontalAlignment(SwingConstants.TRAILING);
-    frmJcalculator.getContentPane().add(txtExpression, "cell 0 0 5 1,growx");
-    txtExpression.setColumns(12);
+    this.txtExpression = new JTextField();
+    this.txtExpression.setEditable(false);
+    this.txtExpression.setBackground(UIManager.getColor("TextField.background"));
+    this.txtExpression.setFont(new Font("Segoe UI", Font.PLAIN, 13));
+    this.txtExpression.setHorizontalAlignment(SwingConstants.TRAILING);
+    this.frmJcalculator.getContentPane().add(this.txtExpression, "cell 0 0 5 1,growx");
+    this.txtExpression.setColumns(12);
 
-    txtResult = new JTextField();
-    txtResult.setEditable(false);
-    txtResult.setBackground(UIManager.getColor("TextField.background"));
-    txtResult.setFont(new Font("Segoe UI Semibold", Font.PLAIN, 21));
-    txtResult.setHorizontalAlignment(SwingConstants.TRAILING);
-    frmJcalculator.getContentPane().add(txtResult, "cell 0 1 5 1,growx");
-    txtResult.setColumns(10);
+    this.txtResult = new JTextField();
+    this.txtResult.setEditable(false);
+    this.txtResult.setBackground(UIManager.getColor("TextField.background"));
+    this.txtResult.setFont(new Font("Segoe UI Semibold", Font.PLAIN, 21));
+    this.txtResult.setHorizontalAlignment(SwingConstants.TRAILING);
+    this.frmJcalculator.getContentPane().add(this.txtResult, "cell 0 1 5 1,growx");
+    this.txtResult.setColumns(10);
 
-    btn7 = new JButton("7");
-    btn7.setFont(new Font("Segoe UI", Font.PLAIN, 16));
-    frmJcalculator.getContentPane().add(btn7, "cell 0 2,grow");
+    this.btn7 = new JButton("7");
+    this.btn7.setFont(new Font("Segoe UI", Font.PLAIN, 16));
+    this.frmJcalculator.getContentPane().add(this.btn7, "cell 0 2,grow");
 
-    btn8 = new JButton("8");
-    btn8.setFont(new Font("Segoe UI", Font.PLAIN, 16));
-    frmJcalculator.getContentPane().add(btn8, "cell 1 2,grow");
+    this.btn8 = new JButton("8");
+    this.btn8.setFont(new Font("Segoe UI", Font.PLAIN, 16));
+    this.frmJcalculator.getContentPane().add(this.btn8, "cell 1 2,grow");
 
-    btn9 = new JButton("9");
-    btn9.setFont(new Font("Segoe UI", Font.PLAIN, 16));
-    frmJcalculator.getContentPane().add(btn9, "cell 2 2,grow");
+    this.btn9 = new JButton("9");
+    this.btn9.setFont(new Font("Segoe UI", Font.PLAIN, 16));
+    this.frmJcalculator.getContentPane().add(this.btn9, "cell 2 2,grow");
 
-    btnBackspace = new JButton("\u2190");
-    btnBackspace.setFont(new Font("Segoe UI", Font.PLAIN, 16));
-    frmJcalculator.getContentPane().add(btnBackspace, "cell 3 2,grow");
+    this.btnBackspace = new JButton("\u2190");
+    this.btnBackspace.setFont(new Font("Segoe UI", Font.PLAIN, 16));
+    this.frmJcalculator.getContentPane().add(this.btnBackspace, "cell 3 2,grow");
 
-    btnClear = new JButton("C");
-    btnClear.setFont(new Font("Segoe UI", Font.PLAIN, 16));
-    frmJcalculator.getContentPane().add(btnClear, "cell 4 2,grow");
+    this.btnClear = new JButton("C");
+    this.btnClear.setFont(new Font("Segoe UI", Font.PLAIN, 16));
+    this.frmJcalculator.getContentPane().add(this.btnClear, "cell 4 2,grow");
 
-    btn4 = new JButton("4");
-    btn4.setFont(new Font("Segoe UI", Font.PLAIN, 16));
-    frmJcalculator.getContentPane().add(btn4, "cell 0 3,grow");
+    this.btn4 = new JButton("4");
+    this.btn4.setFont(new Font("Segoe UI", Font.PLAIN, 16));
+    this.frmJcalculator.getContentPane().add(this.btn4, "cell 0 3,grow");
 
-    btn5 = new JButton("5");
-    btn5.setFont(new Font("Segoe UI", Font.PLAIN, 16));
-    frmJcalculator.getContentPane().add(btn5, "cell 1 3,grow");
+    this.btn5 = new JButton("5");
+    this.btn5.setFont(new Font("Segoe UI", Font.PLAIN, 16));
+    this.frmJcalculator.getContentPane().add(this.btn5, "cell 1 3,grow");
 
-    btn6 = new JButton("6");
-    btn6.setFont(new Font("Segoe UI", Font.PLAIN, 16));
-    frmJcalculator.getContentPane().add(btn6, "cell 2 3,grow");
+    this.btn6 = new JButton("6");
+    this.btn6.setFont(new Font("Segoe UI", Font.PLAIN, 16));
+    this.frmJcalculator.getContentPane().add(this.btn6, "cell 2 3,grow");
 
-    btnMultiply = new JButton("\u00D7");
-    btnMultiply.setFont(new Font("Segoe UI", Font.PLAIN, 16));
-    frmJcalculator.getContentPane().add(btnMultiply, "cell 3 3,grow");
+    this.btnMultiply = new JButton("\u00D7");
+    this.btnMultiply.setFont(new Font("Segoe UI", Font.PLAIN, 16));
+    this.frmJcalculator.getContentPane().add(this.btnMultiply, "cell 3 3,grow");
 
-    btnDivide = new JButton("\u00F7");
-    btnDivide.setFont(new Font("Segoe UI", Font.PLAIN, 16));
-    frmJcalculator.getContentPane().add(btnDivide, "cell 4 3,grow");
+    this.btnDivide = new JButton("\u00F7");
+    this.btnDivide.setFont(new Font("Segoe UI", Font.PLAIN, 16));
+    this.frmJcalculator.getContentPane().add(this.btnDivide, "cell 4 3,grow");
 
-    btn1 = new JButton("1");
-    btn1.setFont(new Font("Segoe UI", Font.PLAIN, 16));
-    frmJcalculator.getContentPane().add(btn1, "cell 0 4,grow");
+    this.btn1 = new JButton("1");
+    this.btn1.setFont(new Font("Segoe UI", Font.PLAIN, 16));
+    this.frmJcalculator.getContentPane().add(this.btn1, "cell 0 4,grow");
 
-    btn2 = new JButton("2");
-    btn2.setFont(new Font("Segoe UI", Font.PLAIN, 16));
-    frmJcalculator.getContentPane().add(btn2, "cell 1 4,grow");
+    this.btn2 = new JButton("2");
+    this.btn2.setFont(new Font("Segoe UI", Font.PLAIN, 16));
+    this.frmJcalculator.getContentPane().add(this.btn2, "cell 1 4,grow");
 
-    btn3 = new JButton("3");
-    btn3.setFont(new Font("Segoe UI", Font.PLAIN, 16));
-    frmJcalculator.getContentPane().add(btn3, "cell 2 4,grow");
+    this.btn3 = new JButton("3");
+    this.btn3.setFont(new Font("Segoe UI", Font.PLAIN, 16));
+    this.frmJcalculator.getContentPane().add(this.btn3, "cell 2 4,grow");
 
-    btnAdd = new JButton("+");
-    btnAdd.setFont(new Font("Segoe UI", Font.PLAIN, 16));
-    frmJcalculator.getContentPane().add(btnAdd, "cell 3 4,grow");
+    this.btnAdd = new JButton("+");
+    this.btnAdd.setFont(new Font("Segoe UI", Font.PLAIN, 16));
+    this.frmJcalculator.getContentPane().add(this.btnAdd, "cell 3 4,grow");
 
-    btnSubtract = new JButton("-");
-    btnSubtract.setFont(new Font("Segoe UI", Font.PLAIN, 16));
-    frmJcalculator.getContentPane().add(btnSubtract, "cell 4 4,grow");
+    this.btnSubtract = new JButton("-");
+    this.btnSubtract.setFont(new Font("Segoe UI", Font.PLAIN, 16));
+    this.frmJcalculator.getContentPane().add(this.btnSubtract, "cell 4 4,grow");
 
-    btn0 = new JButton("0");
-    btn0.setFont(new Font("Segoe UI", Font.PLAIN, 16));
-    frmJcalculator.getContentPane().add(btn0, "cell 0 5 2 1,grow");
+    this.btn0 = new JButton("0");
+    this.btn0.setFont(new Font("Segoe UI", Font.PLAIN, 16));
+    this.frmJcalculator.getContentPane().add(this.btn0, "cell 0 5 2 1,grow");
 
-    btnDecimalPlace = new JButton(".");
-    btnDecimalPlace.setFont(new Font("Segoe UI", Font.PLAIN, 16));
-    frmJcalculator.getContentPane().add(btnDecimalPlace, "cell 2 5,grow");
+    this.btnDecimalPlace = new JButton(".");
+    this.btnDecimalPlace.setFont(new Font("Segoe UI", Font.PLAIN, 16));
+    this.frmJcalculator.getContentPane().add(this.btnDecimalPlace, "cell 2 5,grow");
 
-    btnEquals = new JButton("=");
-    btnEquals.setFont(new Font("Segoe UI", Font.PLAIN, 16));
-    frmJcalculator.getContentPane().add(btnEquals, "cell 3 5 2 1,grow");
+    this.btnEquals = new JButton("=");
+    this.btnEquals.setFont(new Font("Segoe UI", Font.PLAIN, 16));
+    this.frmJcalculator.getContentPane().add(this.btnEquals, "cell 3 5 2 1,grow");
 
-    menuBar = new JMenuBar();
-    frmJcalculator.setJMenuBar(menuBar);
+    this.menuBar = new JMenuBar();
+    this.frmJcalculator.setJMenuBar(this.menuBar);
 
-    mnEdit = new JMenu(" Edit ");
-    menuBar.add(mnEdit);
+    this.mnEdit = new JMenu(" Edit ");
+    this.menuBar.add(this.mnEdit);
 
-    mntmCopy = new JMenuItem(" Copy ");
-    mnEdit.add(mntmCopy);
+    this.mntmCopy = new JMenuItem(" Copy ");
+    this.mnEdit.add(this.mntmCopy);
 
-    mntmPaste = new JMenuItem(" Paste ");
-    mnEdit.add(mntmPaste);
+    this.mntmPaste = new JMenuItem(" Paste ");
+    this.mnEdit.add(this.mntmPaste);
 
-    separatorEdit = new JSeparator();
-    mnEdit.add(separatorEdit);
+    this.separatorEdit = new JSeparator();
+    this.mnEdit.add(this.separatorEdit);
 
-    mntmQuit = new JMenuItem(" Quit ");
-    mnEdit.add(mntmQuit);
+    this.mntmQuit = new JMenuItem(" Quit ");
+    this.mnEdit.add(this.mntmQuit);
 
-    mnHelp = new JMenu(" Help ");
-    menuBar.add(mnHelp);
+    this.mnHelp = new JMenu(" Help ");
+    this.menuBar.add(this.mnHelp);
 
-    mntmAbout = new JMenuItem(" About ");
-    mnHelp.add(mntmAbout);
-    
+    this.mntmAbout = new JMenuItem(" About ");
+    this.mnHelp.add(this.mntmAbout);
+
     // Pack the components as small as possible
-    frmJcalculator.pack();
+    this.frmJcalculator.pack();
   }
 
   private static void initLookAndFeel() {
@@ -254,12 +235,15 @@ public class GUI {
 
         // If L&F = "Metal", set the theme
         if (LOOKANDFEEL.equals("Metal")) {
-          if (THEME.equals("DefaultMetal"))
+          if (THEME.equals("DefaultMetal")) {
             MetalLookAndFeel.setCurrentTheme(new DefaultMetalTheme());
-          else if (THEME.equals("Ocean"))
+          }
+          else if (THEME.equals("Ocean")) {
             MetalLookAndFeel.setCurrentTheme(new OceanTheme());
-          else
+          }
+          else {
             MetalLookAndFeel.setCurrentTheme(new DefaultMetalTheme());
+          }
 
           UIManager.setLookAndFeel(new MetalLookAndFeel());
         }
@@ -279,6 +263,25 @@ public class GUI {
         e.printStackTrace();
       }
     }
+  }
+
+  /**
+   * Launch the application.
+   */
+  public static void main(String[] args) {
+    SwingUtilities.invokeLater(new Runnable() {
+
+      @Override
+      public void run() {
+        try {
+          GUI window = new GUI();
+          window.frmJcalculator.setVisible(true);
+        }
+        catch (Exception e) {
+          e.printStackTrace();
+        }
+      }
+    });
   }
 
 }
