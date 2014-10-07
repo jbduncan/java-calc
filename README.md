@@ -13,4 +13,4 @@ JCalculator is distributed under the permissive MIT licence. Please see LICENCE.
 Acknowledgements
 ================
 
-I would like to thank Eric Laroche for his Java implementation of an unlimited-size rational number (BigRational.java), which I use in this program.
+I would like to thank Eric Laroche (laroche@lrdev.com) for his Java implementation of an unlimited-size rational number (BigRational.java), which I use in this program.
